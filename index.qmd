@@ -13,9 +13,37 @@ To see English version, [click here](/en/index.qmd)
 Ce site centralise les contenus utiles pour
 participer au hackathon
 
-## Télécharger les données
+## Environnement disponible
+
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
+
+Les _packages_ nécessaires pour répliquer les exemples
+proposés dans ce guide.
 
 ```{python}
+#| eval: false
+#| file: "Installer les packages nécessaires"
+#| filename: "Installer les packages nécessaires"
+!pip install pandas geopandas pyreadstat
+```
+
+## `R` {.unnumbered .unlisted}
+
+
+:::
+
+## Télécharger les données
+
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
+
+```{python}
+#| eval: false
+#| file: "Télécharger les données"
+#| filename: "Télécharger les données"
 #url = "https://minio.lab.sspcloud.fr/lgaliana/hackathon/recensement.sav"
 
 import s3fs
@@ -28,20 +56,44 @@ import requests
 fs = s3fs.S3FileSystem(
   client_kwargs={'endpoint_url': 'https://minio.lab.sspcloud.fr'})
 fs.download('lgaliana/hackathon/recensement.sav','recensement.sav')
+```
 
+:::
+
+
+## Importer les données du recensement agricole
+
+```{python}
+#| eval: false
+#| filename: "Importer les données"
+#| file: "Importer les données"
+import pandas as pd
+recensement = pd.read_spss('recensement.sav')
 ```
 
 
+## Importer le dictionnaire des variables du recensement agricole
 
-## Importer les données
+Le dictionnaire des variables est le suivant:
 
-## Importer les métadonnées
-
-```{python}
-!pip install pyreadstat
+```{ojs}
+//| echo: false
+viewof search = Inputs.search(base)
 ```
 
+```{ojs}
+//| echo: false
+Inputs.table(search)
+```
+
+
+Celui-ci est également lisible par le biais de `Python`
+directement depuis le fichier:
+
 ```{python}
+#| eval: false
+#| file: "Importer le dictionnaire des variables"
+#| filename: "Importer le dictionnaire des variables"
 import pyreadstat
 import pandas as pd
 
@@ -53,4 +105,70 @@ documentation.to_csv("dico.csv")
 ```
 
 
-## 
+```{python}
+#| eval: false
+#| file: "Télécharger les données"
+#| filename: "Télécharger les données"
+import pandas as pd
+meta = pd.read_csv("dico.csv")
+meta.head(4)
+```
+
+Ce dictionnaire des variables est également disponible
+par le biais de l'URL [https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv](https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv)
+
+
+```{ojs}
+//| echo: false
+base = d3.csv("https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv");
+```
+
+
+## Importer les fonds de carte
+
+```{python}
+#| file: "Télécharger les fonds de carte"
+#| filename: "Télécharger les fonds de carte"
+import requests
+import zipfile
+import os
+
+# URL of the .zip file to download
+url = "https://minio.lab.sspcloud.fr/projet-hackathon-socstat/data/geo/shp_benin.zip"
+
+# Send a GET request to the URL
+req = requests.get(url)
+
+# Save the .zip file locally
+zip_file_path = "shp_benin.zip"
+with open(zip_file_path, "wb") as file:
+    file.write(req.content)
+
+# Define the directory to extract the contents to
+# You can change this to a specific path if you want
+extract_to_dir = "shp_benin"
+
+# Unzip the files
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_to_dir)
+
+print(f"Files extracted to {extract_to_dir}")
+```
+
+Pour lire les données, par exemple, 
+
+```{python}
+#| file: "Importer les fonds de carte"
+#| filename: "Importer les fonds de carte"
+import geopandas as gpd
+cities_background = gpd.read_file("shp_benin/shp_benin/communes.shp")
+forest_background = gpd.read_file("shp_benin/shp_benin/forêt.shp")
+ax = cities_background.boundary.plot(edgecolor = "k")
+forest_background.plot(ax = ax)
+ax.set_axis_off()
+```
+
+
+
+
+
