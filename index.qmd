@@ -62,20 +62,14 @@ minutes, la base étant assez volumineuse.
 
 ## `Python` {.unnumbered .unlisted}
 
-```{python}
-#| eval: false
-#| filename: "Importer les données"
-#| file: "Importer les données"
+```{.python filename = "Importer les données"}
 import pandas as pd
 recensement = pd.read_spss('recensement_decrypted.sav')
 ```
 
 ## `R` {.unnumbered .unlisted}
 
-```{python}
-#| eval: false
-#| filename: "Importer les données"
-#| file: "Importer les données"
+```{.r filename = "Importer les données"}
 library(haven)
 recensement = read_sav("recensement_decrypted.sav")
 ```
@@ -108,10 +102,7 @@ ou `R`
 Celui-ci est également lisible par le biais de `Python`
 directement depuis le fichier:
 
-```{python}
-#| eval: false
-#| file: "Importer le dictionnaire des variables"
-#| filename: "Importer le dictionnaire des variables"
+```{.python filename = "Importer le dictionnaire des variables"}
 import pyreadstat
 import pandas as pd
 
@@ -123,10 +114,7 @@ documentation.to_csv("dico.csv")
 ```
 
 
-```{python}
-#| eval: false
-#| file: "Télécharger les données"
-#| filename: "Télécharger les données"
+```{.python filename="Télécharger les données"}
 import pandas as pd
 meta = pd.read_csv("dico.csv")
 meta.head(4)
@@ -164,9 +152,7 @@ Quelques fonds de carte sont mis à disposition. Ils sont mis
 
 ## `Python` {.unnumbered .unlisted}
 
-```{python}
-#| file: "Télécharger les fonds de carte"
-#| filename: "Télécharger les fonds de carte"
+```{.python filename = "Télécharger les fonds de carte"}
 import requests
 import zipfile
 import os

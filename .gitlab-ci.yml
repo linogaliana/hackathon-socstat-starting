@@ -3,9 +3,16 @@ image: inseefrlab/onyxia-rstudio:r4.3.2
 pages:
 
   script:
-  - quarto render index.qmd
+  - echo 'couleur du format choisie :'
+  - echo $COULEURFORMAT
+  - echo 'Deploy presentation to Gitlab pages'
+  - Rscript -e 'install.packages(c("yaml", "jsonlite", "htmltools", "digest", "knitr", "rmarkdown", "dplyr", "DT", "plotly"))'
+  - Rscript -e 'print(getwd())'
+  
+#Pour modifier le format sur gitlab, modifier la valeur de cette variable dans le fichier _variables.yml
+  - quarto render index.qmd --to insee-$COULEURFORMAT-revealjs
   - mkdir -p public # on cree le repertoire public
-  - mv _site/* public/ # on copie les repertoires img et css (et leurs ss-rep) dans public
+  - mv _output/* public/ # on copie les repertoires img et css (et leurs ss-rep) dans public
   artifacts:
     paths:
       - public
