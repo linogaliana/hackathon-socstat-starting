@@ -1,15 +1,23 @@
-image: inseefrlab/onyxia-rstudio:r4.3.2
+image: inseefrlab/onyxia-r-datascience:r4.3.2
 
-pages:
+stages:
+  - build
+  - deploy
 
-  script:
-  - echo "Rendering website"
-  - quarto render
-  - mkdir -p public # on cree le repertoire public
-  - mv _site/* public/ # on copie les repertoires img et css (et leurs ss-rep) dans public
+render:
+  stage: build
+  script: quarto render
   artifacts:
     paths:
-      - public
-  only:
-    - master
+    - _site/
 
+pages:
+  stage: deploy
+  dependencies:
+    - render
+  script: 
+    - mkdir -p public
+    - mv _site/ public/
+  artifacts:
+    paths:
+      - public/
