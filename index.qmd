@@ -7,11 +7,15 @@ title: "Guide de démarrage du hackathon SOCSTAT"
 
 This is the French version of the starting guide.
 
-To see English version, [click here](/en/index.qmd)
+To see the English version, [click here](/en/index.qmd)
 :::
 
-Ce site centralise les contenus utiles pour
-participer au hackathon
+Ce site centralise les contenus techniques utiles pour
+participer au _hackathon_.
+
+La vidéo de présentation de l'environnement technique
+est disponible [ici](XXXX). Les _slides_ associées
+sont disponibles [ici](XXXX). 
 
 ## Environnement disponible
 
@@ -22,70 +26,37 @@ participer au hackathon
 Les _packages_ nécessaires pour répliquer les exemples
 proposés dans ce guide.
 
-```{python}
-#| eval: false
-#| file: "Installer les packages nécessaires"
-#| filename: "Installer les packages nécessaires"
-!pip install pandas geopandas pyreadstat cryptography
+```{.python filename= "Installer les packages nécessaires"}
+pip install pandas geopandas pyreadstat
 ```
 
 ## `R` {.unnumbered .unlisted}
 
-```{.r filename: "Installer les packages nécessaires"}
-install.packages("haven")
+```{.r filename="Installer les packages nécessaires"}
+install.packages(c("haven", "readr", "ggplot2", "sf", "archive"))
 ```
 
 :::
 
 ## Télécharger les données
 
-::: {.panel-tabset group="language"}
+Les données sont téléchargeables par
+le biais du lien fourni en amont du _hackathon_. 
 
-## `Python` {.unnumbered .unlisted}
+::: {.callout-important}
+## Rappel
 
-```{python}
-#| eval: false
-#| file: "Télécharger les données"
-#| filename: "Télécharger les données"
-#url = "https://minio.lab.sspcloud.fr/lgaliana/hackathon/recensement.sav"
-
-import s3fs
-import requests
-
-#req = requests.get(url)
-#with open("recensement.sav", "wb") as file:
-#    file.write(req.content)
-
-fs = s3fs.S3FileSystem(
-  client_kwargs={'endpoint_url': 'https://minio.lab.sspcloud.fr'})
-fs.download('projet-hackathon-socstat/data/recensement.sav','recensement.sav')
-```
-
-```{python}
-from cryptography.fernet import Fernet
-
-# Chargement de la clé de chiffrement
-with open('encryption_key.key', 'rb') as file_key:
-    key = file_key.read()
-
-cipher_suite = Fernet(key)
-
-# Déchiffrement du fichier
-with open('recensement_encrypted.sav', 'rb') as encrypted_file:
-    encrypted_data = encrypted_file.read()
-    decrypted_data = cipher_suite.decrypt(encrypted_data)
-
-# Sauvegarde du fichier déchiffré
-with open('recensement_decrypted.sav', 'wb') as decrypted_file:
-    decrypted_file.write(decrypted_data)
-
-print("Le fichier a été déchiffré.")
-```
-
+A l'issue du _hackathon_,
+les participants se sont engagés à supprimer toute copie de la base de données
+qu'ils auraient pu faire.
 :::
 
 
 ## Importer les données du recensement agricole
+
+Une fois celles-ci téléchargées, il est possible de les
+importer avec `Python` ou `R`. L'import met quelques
+minutes, la base étant assez volumineuse. 
 
 ::: {.panel-tabset group="language"}
 
@@ -127,6 +98,12 @@ viewof search = Inputs.search(base)
 Inputs.table(search)
 ```
 
+Il peut également être récupéré dans une session `Python`
+ou `R`
+
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
 
 Celui-ci est également lisible par le biais de `Python`
 directement depuis le fichier:
@@ -159,6 +136,19 @@ Ce dictionnaire des variables est également disponible
 par le biais de l'URL [https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv](https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv)
 
 
+## `R` {.unnumbered .unlisted}
+
+Le dictionnaire des variables a été mis à disposition en amont sous forme CSV.
+Celui-ci est lisible ainsi: 
+
+```{.r filename="Importer le dictionnaire des variables"}
+library(readr)
+meta = read_csv("https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv")
+```
+
+:::
+
+
 ```{ojs}
 //| echo: false
 base = d3.csv("https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv");
@@ -166,6 +156,13 @@ base = d3.csv("https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/d
 
 
 ## Importer les fonds de carte
+
+Quelques fonds de carte sont mis à disposition. Ils sont mis 
+à disposition dans une archive zippée. 
+
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
 
 ```{python}
 #| file: "Télécharger les fonds de carte"
@@ -197,6 +194,7 @@ print(f"Files extracted to {extract_to_dir}")
 ```
 
 Pour lire les données, par exemple, 
+le fond de carte des communes et des forêts
 
 ```{python}
 #| file: "Importer les fonds de carte"
@@ -209,7 +207,46 @@ forest_background.plot(ax = ax)
 ax.set_axis_off()
 ```
 
+## `R` {.unnumbered .unlisted}
+
+```{.r filename="Télécharger les fonds de carte"}
+url <- "https://minio.lab.sspcloud.fr/projet-hackathon-socstat/data/geo/shp_benin.zip"
+download.file(url = url, destfile = "shp_benin.zip")
+
+# Define the directory to extract the contents to
+extract_to_dir <- "shp_benin"
+
+# Check if the directory exists, if not create it
+if (!dir.exists(extract_to_dir)) {
+  dir.create(extract_to_dir)
+}
+
+# Unzip the files
+unzip("shp_benin.zip", exdir = extract_to_dir)
+
+library(archive)
+archive_extract("shp_benin.zip", dir = "shp_benin")
+```
+
+Pour lire les données, par exemple, 
+le fond de carte des communes et des forêts
+
+```{.r filename=""}
+library(sf)
+library(ggplot2)
+
+# Read the shapefiles
+cities_background <- st_read("shp_benin/shp_benin/communes.shp")
+forest_background <- st_read("shp_benin/shp_benin/forêt.shp")
 
 
+# Plotting
+ggplot() +
+  geom_sf(data = cities_background, color = "black", fill = NA) +
+  geom_sf(data = forest_background, fill = "green", alpha = 0.5) +
+  theme_void()
+```
+
+:::
 
 
