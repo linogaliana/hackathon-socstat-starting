@@ -6,7 +6,9 @@ stages:
 
 render:
   stage: build
-  script: quarto render
+  script: 
+    - python3 -m pip install jupyter
+    - quarto render
   artifacts:
     paths:
     - _site/
