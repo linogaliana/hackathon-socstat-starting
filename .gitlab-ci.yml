@@ -17,8 +17,7 @@ pages:
   dependencies:
     - render
   script: 
-    - mkdir -p public
-    - mv _site/ public/
+    - mv _site/* public/
   artifacts:
     paths:
       - public/
