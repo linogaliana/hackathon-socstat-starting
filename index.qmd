@@ -182,9 +182,7 @@ print(f"Files extracted to {extract_to_dir}")
 Pour lire les données, par exemple, 
 le fond de carte des communes et des forêts
 
-```{python}
-#| file: "Importer les fonds de carte"
-#| filename: "Importer les fonds de carte"
+```{.python filename = "Importer les fonds de carte"}
 import geopandas as gpd
 cities_background = gpd.read_file("shp_benin/shp_benin/communes.shp")
 forest_background = gpd.read_file("shp_benin/shp_benin/forêt.shp")
