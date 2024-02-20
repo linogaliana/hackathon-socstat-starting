@@ -22,7 +22,7 @@ participer au hackathon
 Les _packages_ nécessaires pour répliquer les exemples
 proposés dans ce guide.
 
-```{python}
+```{.python}
 #| eval: false
 #| file: "Installer les packages nécessaires"
 #| filename: "Installer les packages nécessaires"
@@ -31,7 +31,7 @@ proposés dans ce guide.
 
 ## `R` {.unnumbered .unlisted}
 
-```{r}
+```{.r}
 #| eval: false
 #| file: "Installer les packages nécessaires"
 #| filename: "Installer les packages nécessaires"
@@ -64,7 +64,16 @@ fs = s3fs.S3FileSystem(
 fs.download('projet-hackathon-socstat/data/recensement.sav','recensement.sav')
 ```
 
-```{python}
+Créer un fichier `encryption_key.key` avec la
+clé partagée en amont du hackathon sous la forme
+
+```{.python filename="encryption_key.key"}
+laCleDeDechiffrement=
+```
+
+Déchiffrer les données
+
+```{.python}
 from cryptography.fernet import Fernet
 
 # Chargement de la clé de chiffrement
@@ -85,7 +94,14 @@ with open('recensement_decrypted.sav', 'wb') as decrypted_file:
 print("Le fichier a été déchiffré.")
 ```
 
+## `R` {.unnumbered .unlisted}
+
+Il est nécessaire de déchiffrer les données avec `Python`
+
+
 :::
+
+
 
 
 ## Importer les données du recensement agricole
@@ -130,6 +146,9 @@ viewof search = Inputs.search(base)
 Inputs.table(search)
 ```
 
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
 
 Celui-ci est également lisible par le biais de `Python`
 directement depuis le fichier:
@@ -160,6 +179,15 @@ meta.head(4)
 
 Ce dictionnaire des variables est également disponible
 par le biais de l'URL [https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv](https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv)
+
+## `R` {.unnumbered .unlisted}
+
+```{.r}
+library(readr)
+meta = read_csv("https://minio.lab.sspcloud.fr/projet-hackathon-socstat/metadata/dico.csv")
+```
+
+:::
 
 
 ```{ojs}
