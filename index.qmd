@@ -16,12 +16,19 @@ participer au hackathon
 ## Télécharger les données
 
 ```{python}
+#url = "https://minio.lab.sspcloud.fr/lgaliana/hackathon/recensement.sav"
+
+import s3fs
 import requests
 
-url = "https://minio.lab.sspcloud.fr/lgaliana/hackathon/recensement.sav"
-req = requests.get(url)
-with open("recensement.sav", "wb") as file:
-    file.write(req.content)
+#req = requests.get(url)
+#with open("recensement.sav", "wb") as file:
+#    file.write(req.content)
+
+fs = s3fs.S3FileSystem(
+  client_kwargs={'endpoint_url': 'https://minio.lab.sspcloud.fr'})
+fs.download('lgaliana/hackathon/recensement.sav','recensement.sav')
+
 ```
 
 
