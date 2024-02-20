@@ -1,0 +1,22 @@
+project:
+  type: website
+  render:
+    - index.qmd
+    - en/index.qmd
+
+website:
+  title: "Site"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - en/index.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+

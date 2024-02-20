@@ -1,0 +1,49 @@
+---
+title: "Guide de démarrage du hackathon SOCSTAT"
+---
+
+::: {.callout-note}
+## English version
+
+This is the French version of the starting guide.
+
+To see English version, [click here](/en/index.qmd)
+:::
+
+Ce site centralise les contenus utiles pour
+participer au hackathon
+
+## Télécharger les données
+
+```{python}
+import requests
+
+url = "https://minio.lab.sspcloud.fr/lgaliana/hackathon/recensement.sav"
+req = requests.get(url)
+with open("recensement.sav", "wb") as file:
+    file.write(req.content)
+```
+
+
+
+## Importer les données
+
+## Importer les métadonnées
+
+```{python}
+!pip install pyreadstat
+```
+
+```{python}
+import pyreadstat
+import pandas as pd
+
+pd.set_option('display.width', 1000)
+
+df, meta = pyreadstat.read_sav("recensement.sav")
+documentation = pd.DataFrame(list(meta.column_names_to_labels.items()), columns=['variable', 'description'])
+documentation.to_csv("dico.csv")
+```
+
+
+## 

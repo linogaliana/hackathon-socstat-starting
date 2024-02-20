@@ -1,0 +1,13 @@
+---
+title: "Starting guide SOCSTAT hackathon"
+---
+
+::: {.callout-note}
+## English version
+
+This is the English version of the starting guide.
+
+To see French version, [click here](/index.qmd)
+:::
+
+
