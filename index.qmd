@@ -26,11 +26,17 @@ proposés dans ce guide.
 #| eval: false
 #| file: "Installer les packages nécessaires"
 #| filename: "Installer les packages nécessaires"
-!pip install pandas geopandas pyreadstat
+!pip install pandas geopandas pyreadstat cryptography
 ```
 
 ## `R` {.unnumbered .unlisted}
 
+```{r}
+#| eval: false
+#| file: "Installer les packages nécessaires"
+#| filename: "Installer les packages nécessaires"
+install.packages("haven")
+```
 
 :::
 
@@ -55,7 +61,28 @@ import requests
 
 fs = s3fs.S3FileSystem(
   client_kwargs={'endpoint_url': 'https://minio.lab.sspcloud.fr'})
-fs.download('lgaliana/hackathon/recensement.sav','recensement.sav')
+fs.download('projet-hackathon-socstat/data/recensement.sav','recensement.sav')
+```
+
+```{python}
+from cryptography.fernet import Fernet
+
+# Chargement de la clé de chiffrement
+with open('encryption_key.key', 'rb') as file_key:
+    key = file_key.read()
+
+cipher_suite = Fernet(key)
+
+# Déchiffrement du fichier
+with open('recensement_encrypted.sav', 'rb') as encrypted_file:
+    encrypted_data = encrypted_file.read()
+    decrypted_data = cipher_suite.decrypt(encrypted_data)
+
+# Sauvegarde du fichier déchiffré
+with open('recensement_decrypted.sav', 'wb') as decrypted_file:
+    decrypted_file.write(decrypted_data)
+
+print("Le fichier a été déchiffré.")
 ```
 
 :::
@@ -63,13 +90,30 @@ fs.download('lgaliana/hackathon/recensement.sav','recensement.sav')
 
 ## Importer les données du recensement agricole
 
+::: {.panel-tabset group="language"}
+
+## `Python` {.unnumbered .unlisted}
+
 ```{python}
 #| eval: false
 #| filename: "Importer les données"
 #| file: "Importer les données"
 import pandas as pd
-recensement = pd.read_spss('recensement.sav')
+recensement = pd.read_spss('recensement_decrypted.sav')
 ```
+
+## `R` {.unnumbered .unlisted}
+
+```{python}
+#| eval: false
+#| filename: "Importer les données"
+#| file: "Importer les données"
+library(haven)
+recensement = read_sav("recensement_decrypted.sav")
+```
+
+
+:::
 
 
 ## Importer le dictionnaire des variables du recensement agricole
