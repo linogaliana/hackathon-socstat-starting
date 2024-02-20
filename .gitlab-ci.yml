@@ -3,7 +3,8 @@ image: inseefrlab/onyxia-rstudio:r4.3.2
 pages:
 
   script:
-  - quarto render index.qmd
+  - echo "Rendering website"
+  - quarto render
   - mkdir -p public # on cree le repertoire public
   - mv _site/* public/ # on copie les repertoires img et css (et leurs ss-rep) dans public
   artifacts:
