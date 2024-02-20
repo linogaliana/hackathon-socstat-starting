@@ -31,10 +31,7 @@ proposés dans ce guide.
 
 ## `R` {.unnumbered .unlisted}
 
-```{r}
-#| eval: false
-#| file: "Installer les packages nécessaires"
-#| filename: "Installer les packages nécessaires"
+```{.r filename: "Installer les packages nécessaires"}
 install.packages("haven")
 ```
 
